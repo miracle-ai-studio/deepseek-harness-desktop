@@ -1,0 +1,27 @@
+{
+  "name": "deepseek-harness-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "^22.19.0 || >=24"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build:plugin && npm run build:app",
+    "build:plugin": "node scripts/run-upstream-bin.mjs tsc -p packages/cordis-plugin/tsconfig.json",
+    "icon:generate": "node scripts/generate-app-icon.mjs",
+    "build:app": "node scripts/build-app.mjs",
+    "test": "npm run test:plugin && npm run test:swift && npm run test:integration",
+    "test:plugin": "npm run build:plugin && node scripts/run-upstream-bin.mjs vitest run --config tests/plugin/vitest.config.ts",
+    "test:swift": "swift run --package-path apps/macos DeepSeekHarnessDesktopCoreTests",
+    "test:integration": "node --test tests/integration/*.test.mjs",
+    "smoke": "node scripts/smoke.mjs",
+    "smoke:native": "node scripts/smoke-native-contract.mjs",
+    "smoke:assembled": "node scripts/smoke-assembled.mjs",
+    "site:serve": "python3 -m http.server 4173 --directory website",
+    "check": "npm run test && npm run build:app && npm run smoke"
+  }
+}

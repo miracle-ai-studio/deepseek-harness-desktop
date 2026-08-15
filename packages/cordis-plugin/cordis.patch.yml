@@ -1,0 +1,10 @@
+# Layer this package after @deepseek-ai/dsh-web-app in the selected profile.
+# The injected services keep this row pending until the existing Host is ready;
+# it does not mount a second webserver or agent runtime.
+- insert:
+    - id: macos-surface
+      name: '@deepseek-ai/dsh-macos-surface'
+      config:
+        applicationPath: !!js process.env.DSH_DESKTOP_APP_PATH ?? '/Applications/DeepSeek Harness Desktop.app'
+        launchMode: launch-if-needed
+        launchTimeoutMs: 30000

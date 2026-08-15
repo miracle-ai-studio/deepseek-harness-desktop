@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="zh-CN" data-repository="deepseek-ai/deepseek-harness-desktop" data-release-asset="DeepSeek-Harness-Desktop.dmg">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#080b10">
+    <meta name="description" content="DeepSeek Harness Desktop — 为 DSH 打造的原生 macOS 客户端。">
+    <meta property="og:title" content="DeepSeek Harness Desktop">
+    <meta property="og:description" content="原生 macOS 窗口，完整 DSH 能力，一个 Host。">
+    <meta property="og:type" content="website">
+    <title>DeepSeek Harness Desktop</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./site.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main" data-zh="跳到主要内容" data-en="Skip to content">跳到主要内容</a>
+
+    <div class="ambient" aria-hidden="true">
+      <span class="ambient__glow ambient__glow--one"></span>
+      <span class="ambient__glow ambient__glow--two"></span>
+      <span class="ambient__grid"></span>
+    </div>
+
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="DeepSeek Harness Desktop">
+        <span class="brand__sigil" aria-hidden="true">D</span>
+        <span class="brand__name">DSH / DESKTOP</span>
+      </a>
+
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="#architecture" data-zh="架构" data-en="Architecture">架构</a>
+        <a href="#install" data-zh="安装" data-en="Install">安装</a>
+        <a data-repository-link href="https://github.com/deepseek-ai/deepseek-harness-desktop">GitHub</a>
+      </nav>
+
+      <button class="language" type="button" data-language-toggle aria-label="Switch to English">EN</button>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top">
+        <div class="hero__copy reveal is-visible">
+          <div class="eyebrow">
+            <span class="eyebrow__pulse"></span>
+            <span data-zh="为 DeepSeek Harness 而生" data-en="Built for DeepSeek Harness">为 DeepSeek Harness 而生</span>
+          </div>
+
+          <h1 data-zh="完整 DSH，<em>原生在 Mac。</em>" data-en="Complete DSH, <em>native on Mac.</em>">完整 DSH，<em>原生在 Mac。</em></h1>
+
+          <p class="hero__lead" data-zh="在 Mac 原生窗口中使用完整 DSH。一个 Host 保留全部插件、Session、工具与权限。" data-en="Use the complete DSH experience in a native Mac window. One Host keeps every plugin, session, tool, and permission intact.">在 Mac 原生窗口中使用完整 DSH。一个 Host 保留全部插件、Session、工具与权限。</p>
+
+          <div class="hero__actions">
+            <a class="button button--primary" data-download href="https://github.com/deepseek-ai/deepseek-harness-desktop/releases/latest/download/DeepSeek-Harness-Desktop.dmg">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2v10m0 0 4-4m-4 4L6 8M3 16h14"/></svg>
+              <span data-zh="下载 macOS 版本" data-en="Download for macOS">下载 macOS 版本</span>
+            </a>
+            <a class="button button--ghost" data-repository-link href="https://github.com/deepseek-ai/deepseek-harness-desktop">
+              <span data-zh="查看源代码" data-en="View source">查看源代码</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+
+          <div class="hero__meta" aria-label="Product details">
+            <span>macOS 13+</span>
+            <span>MIT OPEN SOURCE</span>
+            <span>CORDIS NATIVE</span>
+          </div>
+        </div>
+
+        <div class="hero__visual reveal is-visible" data-hyperframes aria-label="DeepSeek Harness Desktop application preview">
+          <div class="hero__visual-glow" aria-hidden="true"></div>
+          <div class="app-shell">
+            <div class="app-shell__bar">
+              <div class="traffic" aria-hidden="true"><i></i><i></i><i></i></div>
+              <span>DeepSeek Harness</span>
+              <span class="app-shell__state"><i></i> LOCAL</span>
+            </div>
+            <div class="app-shell__body">
+              <aside class="demo-sidebar" aria-hidden="true">
+                <div class="demo-brand"><img src="./deepseek-glyph.svg" alt=""><b>deepseek</b><span>HARNESS</span></div>
+                <div class="demo-new"><span>⊕</span><b data-zh="新会话" data-en="New session">新会话</b></div>
+                <div class="demo-workspace-title"><span data-zh="工作区" data-en="WORKSPACE">工作区</span><i>⌕</i><i>☷</i></div>
+                <div class="demo-folder"><span>▱</span><b>Travel</b></div>
+                <div class="demo-session is-active"><i></i><span data-zh="安排明日行程计划" data-en="Plan tomorrow's trip">安排明日行程计划</span></div>
+                <div class="demo-settings"><span>⚙</span><b data-zh="设置" data-en="Settings">设置</b></div>
+              </aside>
+
+              <div class="hyperframe-stage">
+                <section class="hyperframe is-active" id="frame-start" data-hyperframe="start" role="tabpanel" aria-hidden="false">
+                  <div class="welcome-mark"><img src="./deepseek-glyph.svg" alt=""></div>
+                  <div class="welcome-title"><b data-zh="探索未至之境" data-en="Explore what lies ahead">探索未至之境</b><span data-zh="预览版" data-en="PREVIEW">预览版</span></div>
+                  <div class="welcome-context"><span>▱ Travel</span><span>♧ <span data-zh="标准模式" data-en="Standard mode">标准模式</span></span></div>
+                  <div class="welcome-composer">
+                    <p data-zh="你好，请帮我规划一下明天的行程" data-en="Help me plan tomorrow's itinerary.">你好，请帮我规划一下明天的行程</p>
+                    <div><span>＋</span><small>Workspace Write</small><b>↑</b></div>
+                  </div>
+                </section>
+
+                <section class="hyperframe" id="frame-conversation" data-hyperframe="conversation" role="tabpanel" aria-hidden="true">
+                  <header class="demo-sessionbar"><b data-zh="安排明日行程计划" data-en="Plan tomorrow's trip">安排明日行程计划</b><span data-zh="对话" data-en="Conversation">对话</span><span data-zh="轨迹" data-en="Trace">轨迹</span></header>
+                  <div class="conversation-scroll">
+                    <div class="conversation-user" data-zh="你好，请帮我规划一下明天的行程" data-en="Help me plan tomorrow's itinerary.">你好，请帮我规划一下明天的行程</div>
+                    <div class="context-row">▤ <span data-zh="上下文注入 · skill-catalog" data-en="Context injected · skill-catalog">上下文注入 · skill-catalog</span></div>
+                    <p class="assistant-copy" data-zh="很高兴帮你规划明天的行程。我还需要了解几个关键信息：" data-en="I'll help plan the day. First, I need a few details:">很高兴帮你规划明天的行程。我还需要了解几个关键信息：</p>
+                    <div class="question-card">
+                      <small data-zh="行程风格" data-en="TRIP STYLE">行程风格</small>
+                      <b data-zh="你希望明天的行程偏向什么风格？" data-en="What kind of day would you like?">你希望明天的行程偏向什么风格？</b>
+                      <button type="button"><span>1</span><strong data-zh="城市探索" data-en="City walk">城市探索</strong><em data-zh="逛街、景点、美食打卡" data-en="Streets, sights, and food">逛街、景点、美食打卡</em></button>
+                      <button type="button"><span>2</span><strong data-zh="文艺慢生活" data-en="Slow culture">文艺慢生活</strong><em data-zh="美术馆、书店、咖啡馆" data-en="Museums, books, and cafés">美术馆、书店、咖啡馆</em></button>
+                      <footer><span>2 / 4</span><b data-zh="下一题" data-en="Next">下一题</b></footer>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="hyperframe" id="frame-trace" data-hyperframe="trace" role="tabpanel" aria-hidden="true">
+                  <header class="demo-sessionbar trace-sessionbar"><b data-zh="安排明日行程计划" data-en="Plan tomorrow's trip">安排明日行程计划</b><span data-zh="对话" data-en="Conversation">对话</span><span class="is-current" data-zh="轨迹" data-en="Trace">轨迹</span></header>
+                  <div class="trace-toolbar"><b>◷ Duration</b><span>▤ Turns</span><span>▤ Calls</span><i data-zh="搜索" data-en="Search">搜索</i></div>
+                  <div class="trace-chart" aria-hidden="true"><span>Input</span><i class="trace-input"></i><span>Model</span><i class="trace-model"></i><span>Tools</span><i class="trace-tools"></i></div>
+                  <div class="trace-events">
+                    <div><b class="event-system">SYSTEM</b><span>Initial System Prompt</span></div>
+                    <div><b class="event-user">USER</b><span data-zh="你好，请帮我规划一下明天的行程" data-en="Help me plan tomorrow's itinerary.">你好，请帮我规划一下明天的行程</span></div>
+                    <div><b class="event-context">CONTEXT</b><span>Current runtime context · workspace-write</span></div>
+                    <div><b class="event-assistant">ASSISTANT</b><span data-zh="我还需要了解几个关键信息。" data-en="I need a few details first.">我还需要了解几个关键信息。</span></div>
+                    <div><b class="event-tool">TOOL</b><span>ask_user_question { questions: [...] }</span></div>
+                    <div><b class="event-assistant">ASSISTANT</b><span data-zh="上海 · 城市探索 · 经济实惠 · 全天" data-en="Shanghai · City walk · Budget · Full day">上海 · 城市探索 · 经济实惠 · 全天</span></div>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </div>
+
+          <div class="frame-switcher" role="tablist" aria-label="Application preview states">
+            <button class="is-active" type="button" role="tab" aria-selected="true" aria-controls="frame-start" data-frame-target="start"><i>01</i><span data-zh="开始" data-en="Start">开始</span></button>
+            <button type="button" role="tab" aria-selected="false" aria-controls="frame-conversation" data-frame-target="conversation"><i>02</i><span data-zh="对话" data-en="Conversation">对话</span></button>
+            <button type="button" role="tab" aria-selected="false" aria-controls="frame-trace" data-frame-target="trace"><i>03</i><span data-zh="执行轨迹" data-en="Execution trace">执行轨迹</span></button>
+          </div>
+        </div>
+      </section>
+
+      <section class="principles reveal" aria-label="Core principles">
+        <p data-zh="原生窗口。完整 DSH。仍是同一个运行时。" data-en="Native window. Complete DSH. The same runtime.">原生窗口。完整 DSH。仍是同一个运行时。</p>
+        <div class="principles__rail" aria-hidden="true"><span></span></div>
+        <span>APPKIT</span><span>WKWEBVIEW</span><span>CORDIS</span><span>DSH</span>
+      </section>
+
+      <section class="statement reveal">
+        <p class="section-index">01 / INTENT</p>
+        <h2 data-zh="桌面体验，<br>不改变 DSH 的内核。" data-en="A desktop experience.<br>The same DSH core.">桌面体验，<br>不改变 DSH 的内核。</h2>
+        <p data-zh="原生层只做它最擅长的事：窗口、菜单、文件面板与系统交互。Agent Loop、工具、权限和持久化仍由可组合的插件体系负责。" data-en="The native layer does what it does best: windows, menus, file panels, and system integration. The composable plugin system continues to own the agent loop, tools, permissions, and persistence.">原生层只做它最擅长的事：窗口、菜单、文件面板与系统交互。Agent Loop、工具、权限和持久化仍由可组合的插件体系负责。</p>
+      </section>
+
+      <section class="features" aria-label="Product features">
+        <article class="feature reveal">
+          <div class="feature__icon feature__icon--window" aria-hidden="true"><span></span></div>
+          <span class="feature__number">01</span>
+          <h3 data-zh="原生窗口" data-en="Native window">原生窗口</h3>
+          <p data-zh="AppKit 菜单、查找、缩放、文件选择与下载，遵循熟悉的 macOS 交互。" data-en="AppKit menus, find, zoom, file selection, and downloads follow familiar macOS behavior.">AppKit 菜单、查找、缩放、文件选择与下载，遵循熟悉的 macOS 交互。</p>
+        </article>
+        <article class="feature reveal">
+          <div class="feature__icon feature__icon--plugin" aria-hidden="true"><i></i><i></i><i></i></div>
+          <span class="feature__number">02</span>
+          <h3 data-zh="插件原生" data-en="Plugin-native">插件原生</h3>
+          <p data-zh="标准 dsh.bundle 与 Cordis 生命周期，可安装、可配置，也可由 profile 完整管理。" data-en="Standard dsh.bundle metadata and Cordis lifecycle make it installable, configurable, and profile-managed.">标准 dsh.bundle 与 Cordis 生命周期，可安装、可配置，也可由 profile 完整管理。</p>
+        </article>
+        <article class="feature reveal">
+          <div class="feature__icon feature__icon--shield" aria-hidden="true"><span></span></div>
+          <span class="feature__number">03</span>
+          <h3 data-zh="权限不绕行" data-en="Permissions preserved">权限不绕行</h3>
+          <p data-zh="页面没有原生 Shell 后门。所有工具执行继续经过 DSH capability 与权限策略。" data-en="The page gets no native shell backdoor. Every tool call continues through DSH capabilities and permission policy.">页面没有原生 Shell 后门。所有工具执行继续经过 DSH capability 与权限策略。</p>
+        </article>
+      </section>
+
+      <section class="architecture reveal" id="architecture">
+        <div class="architecture__copy">
+          <p class="section-index">02 / ARCHITECTURE</p>
+          <h2 data-zh="轻量连接，<br>完整能力。" data-en="A light connection.<br>Full capability.">轻量连接，<br>完整能力。</h2>
+          <p data-zh="Cordis 插件等待现有 Web Host 就绪，再把精确的本地地址交给原生 App。没有第二套 Session，没有重复的权限系统。" data-en="The Cordis plugin waits for the existing Web Host, then hands its exact local address to the native app. No second session store. No duplicate permission system.">Cordis 插件等待现有 Web Host 就绪，再把精确的本地地址交给原生 App。没有第二套 Session，没有重复的权限系统。</p>
+          <a href="https://github.com/deepseek-ai/deepseek-harness-desktop/blob/main/docs/architecture.md" data-architecture-link>
+            <span data-zh="阅读架构文档" data-en="Read the architecture">阅读架构文档</span><span aria-hidden="true">↗</span>
+          </a>
+        </div>
+        <div class="architecture__diagram" role="img" aria-label="Cordis plugin connects the macOS app to one DSH Host">
+          <div class="diagram-node diagram-node--host">
+            <span>01</span><b>DSH HOST</b><small>SESSION · TOOLS · POLICY</small>
+          </div>
+          <div class="diagram-link"><i></i><span>127.0.0.1</span></div>
+          <div class="diagram-node diagram-node--plugin">
+            <span>02</span><b>CORDIS PLUGIN</b><small>ATTACH · LIFECYCLE</small>
+          </div>
+          <div class="diagram-link"><i></i><span>--url</span></div>
+          <div class="diagram-node diagram-node--app">
+            <span>03</span><b>MACOS APP</b><small>APPKIT · WEBKIT</small>
+          </div>
+        </div>
+      </section>
+
+      <section class="install reveal" id="install">
+        <div class="install__copy">
+          <p class="section-index">03 / START</p>
+          <h2 data-zh="下载。连接。开始。" data-en="Download. Connect. Begin.">下载。连接。开始。</h2>
+          <p data-zh="Desktop 使用标准 DSH profile 安装方式。安装一次，之后从同一个 web profile 启动。" data-en="Desktop uses the standard DSH profile installation flow. Install it once, then launch from the same web profile.">Desktop 使用标准 DSH profile 安装方式。安装一次，之后从同一个 web profile 启动。</p>
+          <a class="button button--light" data-download href="https://github.com/deepseek-ai/deepseek-harness-desktop/releases/latest/download/DeepSeek-Harness-Desktop.dmg">
+            <span data-zh="下载 macOS 版本" data-en="Download for macOS">下载 macOS 版本</span>
+            <span aria-hidden="true">↓</span>
+          </a>
+        </div>
+        <div class="terminal" aria-label="Installation commands">
+          <div class="terminal__bar"><span></span><span>INSTALL / DSH PROFILE</span><button type="button" data-copy data-zh-label="复制命令" data-en-label="Copy commands" aria-label="复制命令">COPY</button></div>
+          <pre><code data-install-command><i>01</i> npx @deepseek-ai/dsh plugin --profile web add @deepseek-ai/dsh-macos-surface
+
+<i>02</i> npx @deepseek-ai/dsh --profile web</code></pre>
+          <div class="terminal__status"><i></i><span data-zh="原生窗口将自动连接" data-en="The native window connects automatically">原生窗口将自动连接</span></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="brand"><span class="brand__sigil">D</span><span class="brand__name">DSH / DESKTOP</span></div>
+      <p data-zh="为开放、可组合的智能体工作流打造。" data-en="Built for open, composable agent workflows.">为开放、可组合的智能体工作流打造。</p>
+      <div><a data-repository-link href="https://github.com/deepseek-ai/deepseek-harness-desktop">GitHub</a><a href="https://github.com/deepseek-ai/deepseek-harness">DeepSeek Harness</a><span>MIT · <span data-year>2026</span></span></div>
+    </footer>
+  </body>
+</html>

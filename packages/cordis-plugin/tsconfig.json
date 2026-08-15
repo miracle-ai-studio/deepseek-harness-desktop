@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "declaration": true,
+    "declarationMap": false,
+    "sourceMap": false,
+    "outDir": "lib",
+    "declarationDir": "lib/types",
+    "rootDir": "src",
+    "rewriteRelativeImportExtensions": true,
+    "types": ["node"],
+    "typeRoots": ["../../../deepseek-harness/node_modules/@types"],
+    "paths": {
+      "@deepseek-ai/cordis": ["../../../deepseek-harness/vendor/cordis/lib/types/index.d.ts"],
+      "@deepseek-ai/cordis-plugin-loader": ["../../../deepseek-harness/vendor/loader/lib/types/index.d.ts"],
+      "@deepseek-ai/dsh-host-webserver": ["../../../deepseek-harness/packages/host/webserver/lib/types/index.d.ts"],
+      "@deepseek-ai/schemastery": ["../../../deepseek-harness/vendor/schemastery/lib/types/index.d.ts"]
+    }
+  },
+  "include": ["src/**/*.ts"]
+}

@@ -1,0 +1,47 @@
+# macOS and editor metadata
+.DS_Store
+.idea/
+.vscode/
+*.xcuserstate
+xcuserdata/
+DerivedData/
+*.xcarchive/
+*.dSYM/
+*.swp
+*.swo
+*~
+*.orig
+*.rej
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*.p12
+*.mobileprovision
+
+# JavaScript dependencies, caches, and generated output
+node_modules/
+coverage/
+.nyc_output/
+.cache/
+.tmp/
+tmp/
+*.tsbuildinfo
+/packages/*/lib/
+/dist/
+
+# SwiftPM output
+.build/
+.swiftpm/
+
+# Build-generated application resources
+/apps/macos/Resources/AppIcon.icns
+/apps/macos/Resources/DeepSeekGlyph.svg
+
+# Tool logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
