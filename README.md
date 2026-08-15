@@ -6,6 +6,10 @@ A native macOS desktop app for [DeepSeek Harness](https://github.com/deepseek-ai
 
 [Product website](https://miracle-ai-studio.github.io/deepseek-harness-desktop/) · [Architecture](docs/architecture.md) · [Delivery contracts](docs/delivery-contracts.md)
 
+## Download
+
+Download the latest DMG from the [Releases page](https://github.com/miracle-ai-studio/deepseek-harness-desktop/releases/latest). The consumer application includes its versioned DeepSeek Harness Host and official Node.js runtime, so it does not require a source checkout, Homebrew Node, or a separate dependency install.
+
 ## Run from source
 
 Keep this repository beside a compatible DeepSeek Harness checkout:
@@ -35,6 +39,14 @@ open "dist/DeepSeek Harness Desktop.app"
 ```
 
 Opening the app directly selects owner mode: it locates the sibling Harness checkout, starts its existing `web` profile, and owns only that child Host.
+
+To assemble the same self-contained consumer application used for releases:
+
+```sh
+npm run build:release
+npm run smoke:runtime
+npm run smoke:release
+```
 
 ## Attach to an existing profile
 
@@ -69,8 +81,8 @@ Both entry paths preserve one Host as the source of truth. The native layer owns
 | `applicationPath` | `DSH_DESKTOP_APP_PATH`, then `/Applications/DeepSeek Harness Desktop.app` in the shipped profile | Select the companion app. |
 | `launchMode` | `launch-if-needed` | Launch the app; `attach-only` only prints the resolved URL. |
 | `launchTimeoutMs` | `30000` | Native launch and owned-process cleanup deadline. |
-| `DSH_HARNESS_ROOT` | Sibling `../deepseek-harness` | Select a Harness source checkout for owner mode. |
-| `DSH_NODE_BINARY` | Common Homebrew paths, then `PATH` | Select Node for owner mode. |
+| `DSH_HARNESS_ROOT` | Sibling `../deepseek-harness` | Select a Harness source checkout for development owner mode. |
+| `DSH_NODE_BINARY` | Common Homebrew paths, then `PATH` | Select Node for development owner mode. |
 
 ## Development
 
@@ -84,6 +96,8 @@ npm run build:app
 npm run smoke
 npm run smoke:native
 npm run smoke:assembled
+npm run smoke:runtime
+npm run smoke:release
 npm run check
 ```
 

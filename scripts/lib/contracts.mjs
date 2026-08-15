@@ -91,8 +91,8 @@ export function renderInfoPlist() {
   <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
   <key>CFBundleName</key><string>${executable}</string>
   <key>CFBundlePackageType</key><string>APPL</string>
-  <key>CFBundleShortVersionString</key><string>0.1.0</string>
-  <key>CFBundleVersion</key><string>1</string>
+  <key>CFBundleShortVersionString</key><string>0.1.1</string>
+  <key>CFBundleVersion</key><string>2</string>
   <key>LSMinimumSystemVersion</key><string>13.0</string>
   <key>NSHighResolutionCapable</key><true/>
   <key>NSAppTransportSecurity</key><dict><key>NSAllowsLocalNetworking</key><true/></dict>
@@ -133,7 +133,7 @@ export async function resolveApplicationTargets(requestedPath) {
 
 /**
  * Assemble a Swift executable and its resources into a macOS application.
- * @param {{ executablePath: string, outputPath: string, resourceDirectory?: string, swiftBinDirectory?: string }} options Inputs and exact output.
+ * @param {{ executablePath: string, outputPath: string, resourceDirectory?: string, swiftBinDirectory?: string, runtimeDirectory?: string }} options Inputs and exact output.
  * @returns {Promise<string>} Absolute assembled application path.
  */
 export async function assembleApplication(options) {
@@ -177,6 +177,12 @@ export async function assembleApplication(options) {
         await cp(join(options.swiftBinDirectory, entry.name), join(resourcesPath, entry.name), { recursive: true })
       }
     }
+  }
+  if (options.runtimeDirectory) {
+    const runtimeDirectory = resolve(options.runtimeDirectory)
+    const runtimeInfo = await stat(runtimeDirectory).catch(() => undefined)
+    if (!runtimeInfo?.isDirectory()) throw new Error('Embedded runtime directory is missing')
+    await cp(runtimeDirectory, join(resourcesPath, 'runtime'), { recursive: true })
   }
 
   await mkdir(dirname(outputPath), { recursive: true })

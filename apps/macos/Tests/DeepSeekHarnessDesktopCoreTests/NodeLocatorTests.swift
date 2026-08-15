@@ -37,9 +37,9 @@ enum NodeLocatorTests {
             throw TestFailure(message: "missing Node must fail")
         } catch let error as NodeLocatorError {
             let message = error.localizedDescription
-            try expect(message.contains("DSH_NODE_BINARY=\(missingOverride)"), "failure reports override")
-            try expect(message.contains(missingStandard), "failure reports standard candidate")
-            try expect(message.contains("PATH=/missing/bin"), "failure reports PATH")
+            try expect(!message.contains(missingOverride), "failure hides override path")
+            try expect(!message.contains(missingStandard), "failure hides standard candidate")
+            try expect(!message.contains("/missing/bin"), "failure hides PATH")
         }
     }
 

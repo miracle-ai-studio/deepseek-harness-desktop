@@ -1,6 +1,6 @@
 {
   "name": "deepseek-harness-desktop",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "type": "module",
   "engines": {
@@ -14,6 +14,8 @@
     "build:plugin": "node scripts/run-upstream-bin.mjs tsc -p packages/cordis-plugin/tsconfig.json",
     "icon:generate": "node scripts/generate-app-icon.mjs",
     "build:app": "node scripts/build-app.mjs",
+    "stage:runtime": "node scripts/stage-runtime.mjs",
+    "build:release": "npm run stage:runtime && node scripts/build-app.mjs --output 'dist/release/DeepSeek Harness Desktop.app' --runtime dist/runtime",
     "test": "npm run test:plugin && npm run test:swift && npm run test:integration",
     "test:plugin": "npm run build:plugin && node scripts/run-upstream-bin.mjs vitest run --config tests/plugin/vitest.config.ts",
     "test:swift": "swift run --package-path apps/macos DeepSeekHarnessDesktopCoreTests",
@@ -21,6 +23,11 @@
     "smoke": "node scripts/smoke.mjs",
     "smoke:native": "node scripts/smoke-native-contract.mjs",
     "smoke:assembled": "node scripts/smoke-assembled.mjs",
+    "smoke:runtime": "node scripts/smoke-embedded-runtime.mjs",
+    "smoke:release": "node scripts/smoke-release-app.mjs",
+    "audit:release": "node scripts/audit-release.mjs",
+    "sanitize:runtime": "node scripts/sanitize-runtime.mjs",
+    "build:dmg": "node scripts/build-dmg.mjs",
     "site:serve": "python3 -m http.server 4173 --directory website",
     "check": "npm run test && npm run build:app && npm run smoke"
   }

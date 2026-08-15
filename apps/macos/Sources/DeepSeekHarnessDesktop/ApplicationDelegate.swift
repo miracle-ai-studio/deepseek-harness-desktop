@@ -80,18 +80,29 @@ final class ApplicationDelegate: NSObject, NSApplicationDelegate, NSMenuItemVali
         statusController.showLoading()
         do {
             let environment = ProcessInfo.processInfo.environment
-            let harnessRoot = try HarnessRootLocator.locate(
-                commandLineRoot: arguments.harnessRoot,
-                environment: environment,
-                executableURL: URL(fileURLWithPath: CommandLine.arguments[0])
-            )
-            let nodeURL = try NodeLocator.locate(environment: environment)
-            let specification = HostLaunchSpecification.owner(
-                nodeURL: nodeURL,
-                harnessRoot: harnessRoot,
-                profile: arguments.profile,
-                environment: environment
-            )
+            let executableURL = URL(fileURLWithPath: CommandLine.arguments[0])
+            let specification: HostLaunchSpecification
+            if let runtime = try EmbeddedRuntimeLocator.locate(executableURL: executableURL) {
+                specification = HostLaunchSpecification.embeddedOwner(
+                    runtime: runtime,
+                    profile: arguments.profile,
+                    environment: environment,
+                    workingDirectoryURL: FileManager.default.homeDirectoryForCurrentUser
+                )
+            } else {
+                let harnessRoot = try HarnessRootLocator.locate(
+                    commandLineRoot: arguments.harnessRoot,
+                    environment: environment,
+                    executableURL: executableURL
+                )
+                let nodeURL = try NodeLocator.locate(environment: environment)
+                specification = HostLaunchSpecification.owner(
+                    nodeURL: nodeURL,
+                    harnessRoot: harnessRoot,
+                    profile: arguments.profile,
+                    environment: environment
+                )
+            }
             let child = OwnedHostProcess(specification: specification) { [weak self] event in
                 switch event {
                 case .ready(let origin):
@@ -101,7 +112,11 @@ final class ApplicationDelegate: NSObject, NSApplicationDelegate, NSMenuItemVali
                 }
             }
             hostProcess = child
-            try child.start()
+            do {
+                try child.start()
+            } catch {
+                throw OwnedHostStartupError.failedToStart
+            }
         } catch {
             show(error: error.localizedDescription, retry: { [weak self] in self?.restartOwnedHost() })
         }
@@ -279,5 +294,13 @@ final class ApplicationDelegate: NSObject, NSApplicationDelegate, NSMenuItemVali
         menu.addItem(withTitle: "Bring All to Front", action: #selector(NSApplication.arrangeInFront(_:)), keyEquivalent: "")
         item.submenu = menu
         NSApplication.shared.windowsMenu = menu
+    }
+}
+
+private enum OwnedHostStartupError: LocalizedError {
+    case failedToStart
+
+    var errorDescription: String? {
+        "本地服务无法启动，请重新下载安装或稍后重试。"
     }
 }

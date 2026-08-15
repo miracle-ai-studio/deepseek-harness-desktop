@@ -90,6 +90,27 @@ test('application assembly produces the contracted bundle metadata and executabl
   assert.equal(await readFile(join(output, 'Contents', 'Resources', 'Desktop_Core.bundle', 'resource.txt'), 'utf8'), 'resource')
 })
 
+test('consumer assembly copies the embedded runtime under application resources', async () => {
+  const fixture = await mkdtemp(join(tmpdir(), 'desktop runtime assembly-'))
+  const executable = join(fixture, 'DeepSeekHarnessDesktop')
+  const output = join(fixture, `${PRODUCT_NAME}.app`)
+  const resources = join(fixture, 'resources')
+  const runtime = join(fixture, 'runtime')
+  await writeFile(executable, '#!/bin/sh\nexit 0\n', 'utf8')
+  await chmod(executable, 0o755)
+  await mkdir(resources)
+  await writeFile(join(resources, APP_ICON_FILENAME), 'fixture icon', 'utf8')
+  await writeFile(join(resources, STARTUP_GLYPH_FILENAME), '<svg><path d="M0 0" fill="#000000"/></svg>\n', 'utf8')
+  await mkdir(runtime)
+  await writeFile(join(runtime, 'manifest.json'), '{"formatVersion":1}\n', 'utf8')
+
+  await assembleApplication({ executablePath: executable, outputPath: output, resourceDirectory: resources, runtimeDirectory: runtime })
+  assert.equal(
+    await readFile(join(output, 'Contents', 'Resources', 'runtime', 'manifest.json'), 'utf8'),
+    '{"formatVersion":1}\n',
+  )
+})
+
 test('application assembly rejects broad, non-app, and symbolic-link outputs without deleting them', async () => {
   const fixture = await mkdtemp(join(tmpdir(), 'desktop unsafe output-'))
   const executable = join(fixture, 'DeepSeekHarnessDesktop')

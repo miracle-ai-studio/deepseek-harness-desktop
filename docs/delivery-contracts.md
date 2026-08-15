@@ -17,7 +17,7 @@ The native application is a client surface, not a second agent Host. Cordis and 
 | --- | --- | --- |
 | Cordis plugin | `packages/cordis-plugin/**`, `bundle/**`, `tests/plugin/**` | A TypeScript Cordis plugin and bundle patch that can be referenced by `cordis.yml`, waits for the existing Web Host, and launches or attaches the native application. |
 | macOS application | `apps/macos/**`, `tests/swift/**` | A SwiftPM AppKit/WebKit application that attaches to a supplied Host URL or starts the existing Harness Web Host when opened directly. |
-| Integration tooling | `scripts/**`, `tests/integration/**` | Deterministic scripts that build an `.app`, locate the sibling Harness checkout, and verify the assembled startup interfaces without modifying either implementation. |
+| Integration tooling | `scripts/**`, `tests/integration/**` | Deterministic scripts that build an `.app`, stage a production Host dependency closure from the sibling Harness checkout without modifying it, and verify the assembled startup interfaces. |
 | Primary integration | Root files, `docs/**`, final cross-component fixes | Root build configuration, user documentation, contract governance, assembled verification, and final acceptance. |
 
 Agents must not edit paths owned by another component. They may report a contract mismatch to the primary agent instead of adapting the other component implicitly.
@@ -28,6 +28,9 @@ Agents must not edit paths owned by another component. They may report a contrac
 - Bundle identifier: `ai.deepseek.harness.desktop`
 - Cordis package: `@deepseek-ai/dsh-macos-surface`
 - Development application output: `dist/DeepSeek Harness Desktop.app`
+- Consumer application output: `dist/release/DeepSeek Harness Desktop.app`
+- Embedded Node executable: `Contents/Resources/runtime/node/bin/node`
+- Embedded Host entry: `Contents/Resources/runtime/host/node_modules/@deepseek-ai/dsh/lib/bin.js`
 - Harness checkout resolution order:
   1. `DSH_HARNESS_ROOT`
   2. sibling directory `../deepseek-harness` relative to this repository
@@ -42,12 +45,20 @@ DeepSeek Harness Desktop [--url <http://127.0.0.1:PORT>] [--harness-root <path>]
 ```
 
 - `--url` selects attach mode. The application must not start or terminate the Host in this mode.
-- Without `--url`, the application selects owner mode, locates the Harness checkout, starts its Web profile on an OS-assigned loopback port, and terminates only that child process during application shutdown.
+- Without `--url`, the application selects owner mode. A consumer build starts its embedded Host with its embedded Node executable; a development build without embedded artifacts falls back to the documented source-checkout discovery. In both cases it starts the Web profile on an OS-assigned loopback port and terminates only that child process during application shutdown.
 - `--harness-root` overrides Harness discovery for owner mode.
 - `--profile` defaults to `web`.
 - Unknown arguments, missing values, invalid non-loopback URLs, startup failure, and early Host exit must produce a visible error and a non-zero command-line diagnostic where applicable.
 
-The application launches the source checkout with this semantic command:
+The consumer application launches the embedded production entry with this semantic command:
+
+```text
+Contents/Resources/runtime/node/bin/node Contents/Resources/runtime/host/node_modules/@deepseek-ai/dsh/lib/bin.js --profile <profile> --port 0
+```
+
+Its working directory is the user's home directory, not the read-only application bundle. The embedded runtime is authoritative whenever its manifest is present: a partial or damaged embedded runtime fails closed and never silently falls back to a developer checkout.
+
+A development application without an embedded manifest launches the source checkout with this semantic command:
 
 ```text
 node --import tsx/esm apps/cli/src/bin.ts --profile <profile> --port 0
@@ -55,7 +66,19 @@ node --import tsx/esm apps/cli/src/bin.ts --profile <profile> --port 0
 
 The working directory is the resolved Harness root. The exact launcher may resolve `node` and `tsx` paths without changing these arguments.
 
-Owner mode resolves the Node executable in this order: `DSH_NODE_BINARY`, `/opt/homebrew/bin/node`, `/usr/local/bin/node`, then `node` through the inherited `PATH`. A candidate must be an executable regular file, except the final `PATH` lookup. Failure reports every supported override/candidate instead of silently exiting; this is required because applications opened by Finder do not inherit an interactive shell setup.
+Development owner mode resolves the Node executable in this order: `DSH_NODE_BINARY`, `/opt/homebrew/bin/node`, `/usr/local/bin/node`, then `node` through the inherited `PATH`. A candidate must be an executable regular file, except the final `PATH` lookup. User-visible failure text must not echo candidate paths, environment values, source anchors, usernames, or other build-machine locations.
+
+## Embedded runtime assembly
+
+The consumer release stages the existing Harness runtime rather than reimplementing it:
+
+1. The staging tool reads a named Harness checkout and works only in an isolated temporary clone, leaving the checkout unchanged.
+2. It builds the Harness packages, computes the production workspace dependency and required-peer closure rooted at `@deepseek-ai/dsh` plus the Web frontend, and deploys that closure with production dependencies only.
+3. It materializes all package symlinks so the application bundle is relocatable, and rejects any remaining symbolic link or missing CLI/Web entrypoint.
+4. It downloads the pinned official macOS Node archive over HTTPS, verifies its committed SHA-256 digest, and embeds the executable with its license.
+5. Assembly writes a versioned runtime manifest containing only product versions, architecture, relative entrypoints, and archive digests. No absolute source, package-store, cache, home-directory, or temporary path may be written to the application, disk image, logs shown to users, documentation, or release metadata.
+
+The release build fails before publication if runtime closure, entrypoint, architecture, relocation, or path-hygiene verification fails. Generated runtime content remains ignored and is never committed.
 
 ## Host readiness interface
 
@@ -137,3 +160,5 @@ The assembled result is accepted when:
 4. The tooling creates `dist/DeepSeek Harness Desktop.app` with the declared bundle identifier and executable.
 5. A keyless integration smoke verifies the plugin package/bundle metadata and native executable interface.
 6. When the existing Harness dependencies are available, an assembled smoke starts the Web Host, observes its declared readiness line, and attaches the application without starting a second Host.
+7. A consumer smoke relocates the application away from both repositories, launches owner mode with isolated user state and no development overrides, observes Host readiness, and confirms the embedded process is the only Host it owns.
+8. A release audit scans the application and disk image for absolute build paths, usernames, environment/configuration files, credentials, unresolved symlinks, and missing runtime licenses before any GitHub asset is uploaded.

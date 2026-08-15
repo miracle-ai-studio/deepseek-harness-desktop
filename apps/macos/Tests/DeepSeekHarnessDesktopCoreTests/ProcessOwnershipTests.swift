@@ -18,6 +18,23 @@ enum ProcessOwnershipTests {
         try expect(specification.environment["EXISTING"] == "yes", "environment preservation")
         try expect(specification.ownership == .childStartedByApplication, "specification ownership")
 
+        let embeddedRuntime = EmbeddedHostRuntime(
+            nodeURL: URL(fileURLWithPath: "/app/runtime/node"),
+            hostEntryURL: URL(fileURLWithPath: "/app/runtime/host/bin.js"),
+            webFrontendURL: URL(fileURLWithPath: "/app/runtime/host/index.html")
+        )
+        let embedded = HostLaunchSpecification.embeddedOwner(
+            runtime: embeddedRuntime,
+            profile: "web",
+            environment: ["DSH_HARNESS_ROOT": "/private/source", "DSH_NODE_BINARY": "/private/node"],
+            workingDirectoryURL: URL(fileURLWithPath: "/home")
+        )
+        try expect(embedded.arguments == [
+            "/app/runtime/host/bin.js", "--profile", "web", "--port", "0",
+        ], "embedded Host arguments")
+        try expect(embedded.environment["DSH_HARNESS_ROOT"] == nil, "embedded Host removes source override")
+        try expect(embedded.environment["DSH_NODE_BINARY"] == nil, "embedded Host removes Node override")
+
         var termination = OwnedProcessTerminationState()
         try expect(termination.request() == .startAttempt, "first termination starts")
         try expect(termination.request() == .joinAttempt, "concurrent termination joins")

@@ -48,11 +48,11 @@ macOS 应用                                     现有 Cordis Host
 
 ### Owner 模式
 
-不带 `--url` 打开 `.app` 时进入 owner 模式。应用依次通过 `--harness-root`、`DSH_HARNESS_ROOT` 或同级目录解析 Harness 源码位置；通过 `DSH_NODE_BINARY`、常见 Homebrew 路径或继承的 `PATH` 解析 Node；然后以端口 `0` 启动现有 Harness `web` profile。
+不带 `--url` 打开 `.app` 时进入 owner 模式。消费者版本会从应用内相对位置解析内置 Node 可执行文件与 Harness CLI，再以端口 `0` 启动现有 Harness `web` profile。内置 manifest 一旦存在就是权威来源：运行时不完整时会关闭失败，不会回退到开发机环境。没有该 manifest 的源码构建仍保留文档约定的 checkout 与 Node 发现流程，供开发使用。
 
 子进程会收到 `DSH_DESKTOP_APP_OWNS_HOST=1`。如果该 profile 中安装了 Desktop Cordis 插件，这个递归保护会阻止它再次启动第二个 App。
 
-应用读取合并后的子进程输出，只接受规定的 readiness 日志 `dsh web: http://127.0.0.1:<port>`。默认超时时间是 60 秒，因为冷启动包含 Node、模块加载、Cordis 组合和 Web 应用 settle。readiness 之前的输出会保留并用于可见诊断。
+应用读取合并后的子进程输出，只接受规定的 readiness 日志 `dsh web: http://127.0.0.1:<port>`。默认超时时间是 60 秒，因为冷启动包含 Node、模块加载、Cordis 组合和 Web 应用 settle。原生失败页面不会回显原始 Host 输出，避免本地路径、环境数据或凭据出现在用户可见诊断中。
 
 用户退出时，AppKit 会延迟应用终止，让确定由本应用拥有的子进程先尝试优雅退出。经过有限等待后，应用可以强制终止同一个子进程。它不会查找或关闭无关的 Host 进程。
 
@@ -101,16 +101,14 @@ Web content process 终止时，App 会使用一次自动恢复机会。继续�
 
 ## 产物与平台支持
 
-构建脚本会编译 SwiftPM 可执行文件，从 Harness 官方 glyph 生成 App 图标和黑白启动 glyph，并在 `dist/DeepSeek Harness Desktop.app` 组装标准 Application Bundle。生成资源和构建输出不会进入源码版本控制。
+开发构建会编译 SwiftPM 可执行文件，从 Harness 官方 glyph 生成 App 图标和黑白启动 glyph，并在 `dist/DeepSeek Harness Desktop.app` 组装标准 Application Bundle。消费者构建还会在 `Contents/Resources/runtime` 下暂存封闭的生产依赖图与经过校验和验证的官方 Node.js 运行时。生成资源和构建输出不会进入源码版本控制。
 
-SwiftPM 当前会生成单一宿主架构产物。本版本已验证的产物未签名、未公证，并且只有 `x86_64`。它原生支持 Intel Mac，在 Apple Silicon 上通过 Rosetta 2 运行。Universal 2 发行版需要分别构建 `arm64` 和 `x86_64`、使用 `lipo` 组装、在两种架构上测试、配置签名和 Hardened Runtime，并完成公证。
-
-应用当前会启动本地 Harness 源码目录和外部 Node 运行时。未来的独立消费者发行版可以内嵌或安装带版本的运行时，但必须继续保持单一 Host 所有权和相同的 DSH 插件接口。
+运行时暂存只在所选 Harness revision 的隔离 clone 中进行，绝不会修改该 checkout。流程会物化包链接、移除包管理器的机器状态、剥离原生调试路径，并拒绝缺少 CLI/Web 入口的产物。Release smoke 随后使用隔离用户状态运行 Host，并在没有开发覆盖变量的情况下启动已搬移的应用副本。
 
 ## 演进方式
 
 本设计支持渐进式原生替换。未来某个原生页面可以调用类型化 Host API，其余页面继续使用 WebKit。展示层变化本身不会转移 Session 和权限的所有权。
 
-Universal 2、签名、公证、更新、运行时打包和经过认证的 loopback 传输都可以围绕现有拓扑逐步加入，不需要第二套 Host 或新的插件模型。
+发行能力和经过认证的 loopback 传输可以继续围绕现有拓扑演进，不需要第二套 Host 或新的插件模型。
 
 跨组件接口详情和验收检查见[交付约定](delivery-contracts.md)。

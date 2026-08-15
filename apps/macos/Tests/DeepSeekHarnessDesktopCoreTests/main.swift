@@ -5,6 +5,7 @@ let tests: [(String, () throws -> Void)] = [
     ("BrowserSecurityPolicy", BrowserSecurityPolicyTests.run),
     ("LoopbackOrigin", LoopbackOriginTests.run),
     ("HarnessRootLocator", HarnessRootLocatorTests.run),
+    ("EmbeddedRuntimeLocator", EmbeddedRuntimeLocatorTests.run),
     ("HostReadiness", HostReadinessTests.run),
     ("NodeLocator", NodeLocatorTests.run),
     ("ProcessOwnership", ProcessOwnershipTests.run),

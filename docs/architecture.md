@@ -48,11 +48,11 @@ Both paths converge on one Web Host and one native client. Only process ownershi
 
 ### Owner mode
 
-Opening the `.app` without `--url` selects owner mode. The application resolves the Harness checkout from `--harness-root`, `DSH_HARNESS_ROOT`, or the sibling directory; resolves Node from `DSH_NODE_BINARY`, common Homebrew locations, or inherited `PATH`; and starts the existing Harness `web` profile with port `0`.
+Opening the `.app` without `--url` selects owner mode. A consumer build resolves its Node executable and Harness CLI from the application-relative embedded runtime, then starts the existing Harness `web` profile with port `0`. An embedded manifest is authoritative: a partial runtime fails closed instead of falling back to a developer machine. Source builds without that manifest retain the documented checkout and Node discovery path for development.
 
 The child receives `DSH_DESKTOP_APP_OWNS_HOST=1`. If the desktop Cordis plugin is present in that profile, this recursion fence prevents it from launching a second application.
 
-The application reads merged child output and accepts only the declared readiness line `dsh web: http://127.0.0.1:<port>`. The default deadline is 60 seconds because a cold source launch includes Node, module loading, Cordis composition, and Web application settlement. Output before readiness is retained for a visible diagnostic.
+The application reads merged child output and accepts only the declared readiness line `dsh web: http://127.0.0.1:<port>`. The default deadline is 60 seconds because a cold launch includes Node, module loading, Cordis composition, and Web application settlement. Raw Host output is not echoed into the native failure surface, preventing local paths, environment data, or credentials from appearing in user-visible diagnostics.
 
 When the user quits, AppKit delays termination while the exact owned child receives graceful termination. After a bounded interval, the application may force that same child to exit. No unrelated Host process is discovered or killed.
 
@@ -101,16 +101,14 @@ Navigation isolation does not authenticate the client to the Host. Another proce
 
 ## Artifacts and platform support
 
-The build script compiles the SwiftPM executable, generates the icon and monochrome startup glyph from the official Harness glyph, and assembles a conventional application bundle at `dist/DeepSeek Harness Desktop.app`. Generated resources and build output are not source-controlled.
+The development build compiles the SwiftPM executable, generates the icon and monochrome startup glyph from the official Harness glyph, and assembles a conventional application bundle at `dist/DeepSeek Harness Desktop.app`. The consumer build additionally stages a closed production dependency graph and a checksum-verified official Node.js runtime under `Contents/Resources/runtime`. Generated resources and build output are not source-controlled.
 
-SwiftPM currently produces one host-architecture artifact. The artifact verified for this revision is unsigned, unnotarized, and `x86_64` only. It supports Intel Macs natively and Apple Silicon through Rosetta 2. A Universal 2 release requires separate `arm64` and `x86_64` builds, `lipo` assembly, testing on both architectures, signing, hardened runtime configuration, and notarization.
-
-The application currently launches a local Harness source checkout and external Node runtime. A self-contained consumer release may later embed or install a versioned runtime, but it must preserve the same single-Host ownership and DSH plugin interfaces.
+Runtime staging operates on an isolated clone of the selected Harness revision and never modifies that checkout. It materializes package links, removes package-manager machine state, strips native debug paths, and rejects missing CLI/Web entries. Release smoke then runs the Host with isolated user state and launches a relocated copy of the application without development overrides.
 
 ## Evolution model
 
 This design supports incremental native replacement. A future native screen can call a typed Host API while the remaining screens continue in WebKit. Session and permission ownership does not move merely because presentation changes.
 
-Distribution improvements such as Universal 2, signing, notarization, updates, runtime packaging, and authenticated loopback transport can be added around the existing topology. They do not require a second Host or a new plugin model.
+Distribution and authenticated loopback transport can continue to evolve around the existing topology. They do not require a second Host or a new plugin model.
 
 Cross-component interface details and acceptance checks are maintained in [Delivery contracts](delivery-contracts.md).

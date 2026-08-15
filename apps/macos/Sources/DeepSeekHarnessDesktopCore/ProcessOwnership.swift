@@ -77,4 +77,28 @@ public struct HostLaunchSpecification: Equatable, Sendable {
             ownership: .childStartedByApplication
         )
     }
+
+    /// Builds the owner-mode command for a relocatable embedded runtime.
+    public static func embeddedOwner(
+        runtime: EmbeddedHostRuntime,
+        profile: String,
+        environment: [String: String],
+        workingDirectoryURL: URL
+    ) -> HostLaunchSpecification {
+        var childEnvironment = environment
+        childEnvironment["DSH_DESKTOP_APP_OWNS_HOST"] = "1"
+        childEnvironment.removeValue(forKey: "DSH_HARNESS_ROOT")
+        childEnvironment.removeValue(forKey: "DSH_NODE_BINARY")
+        return HostLaunchSpecification(
+            executableURL: runtime.nodeURL,
+            arguments: [
+                runtime.hostEntryURL.path,
+                "--profile", profile,
+                "--port", "0",
+            ],
+            workingDirectoryURL: workingDirectoryURL,
+            environment: childEnvironment,
+            ownership: .childStartedByApplication
+        )
+    }
 }

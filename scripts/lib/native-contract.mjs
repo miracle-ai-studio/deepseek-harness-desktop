@@ -85,6 +85,8 @@ const sourceRequirements = [
   ['60-second Host readiness default', /func start\s*\(\s*timeout:\s*TimeInterval\s*=\s*60\s*\)/],
   ['validated Host readiness deadline', /HostReadinessDeadline\s*\(\s*seconds:\s*timeout\s*\)/],
   ['deadline-derived readiness diagnostic', /diagnosticSeconds/],
+  ['embedded runtime manifest locator', /EmbeddedRuntimeLocator/],
+  ['embedded owner launch', /embeddedOwner/],
 ]
 
 const forbiddenSourcePatterns = [
@@ -93,6 +95,8 @@ const forbiddenSourcePatterns = [
   ['JavaScript window.find injection', /window\.find\s*\(/],
   ['product DOM query from native code', /document\.querySelector\s*\(/],
   ['general JavaScript message bridge', /WKScriptMessageHandler|addScriptMessageHandler/],
+  ['compiled absolute Swift source anchor', /#filePath/],
+  ['raw Host diagnostics in user-visible errors', /\\\(diagnostics\\\)/],
 ]
 
 /**

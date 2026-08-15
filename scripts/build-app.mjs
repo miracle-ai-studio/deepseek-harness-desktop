@@ -11,6 +11,7 @@ const specification = {
   '--output': { kind: 'value', name: 'output' },
   '--product': { kind: 'value', name: 'product' },
   '--skip-build': { kind: 'flag', name: 'skipBuild' },
+  '--runtime': { kind: 'value', name: 'runtime' },
 }
 
 function runSwift(arguments_) {
@@ -18,6 +19,12 @@ function runSwift(arguments_) {
   if (result.error) throw new Error(`Unable to run swift: ${result.error.message}`)
   if (result.status !== 0) throw new Error(`swift ${arguments_.join(' ')} failed (${result.status}):\n${result.stderr || result.stdout}`)
   return result.stdout.trim()
+}
+
+function stripReleaseExecutable(path) {
+  const result = spawnSync('/usr/bin/strip', ['-S', path], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] })
+  if (result.error) throw new Error(`Unable to strip release executable: ${result.error.message}`)
+  if (result.status !== 0) throw new Error(`Release executable stripping failed (${result.status}).`)
 }
 
 async function main() {
@@ -42,7 +49,11 @@ async function main() {
     outputPath,
     resourceDirectory,
     swiftBinDirectory: binDirectory,
+    runtimeDirectory: options.runtime,
   })
+  if (configuration === 'release') {
+    stripReleaseExecutable(join(assembled, 'Contents', 'MacOS', PRODUCT_NAME))
+  }
   process.stdout.write(`${assembled}\n`)
 }
 

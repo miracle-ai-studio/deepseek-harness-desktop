@@ -13,7 +13,6 @@ final class OwnedHostProcess {
     private let outputPipe = Pipe()
     private let queue = DispatchQueue(label: "ai.deepseek.harness.desktop.host-output")
     private var scanner = HostOutputScanner()
-    private var diagnostics = ""
     private var reportedReadiness = false
     private var reportedFailure = false
     private var stopping = false
@@ -85,10 +84,6 @@ final class OwnedHostProcess {
     private func consume(_ text: String) {
         queue.async { [weak self] in
             guard let self else { return }
-            self.diagnostics.append(text)
-            if self.diagnostics.utf8.count > 131_072 {
-                self.diagnostics = String(self.diagnostics.suffix(65_536))
-            }
             guard !self.reportedReadiness, let origin = self.scanner.append(text) else { return }
             self.reportedReadiness = true
             self.deadline?.cancel()
@@ -100,7 +95,7 @@ final class OwnedHostProcess {
         guard !reportedReadiness, !reportedFailure, !stopping else { return }
         reportedFailure = true
         if process.isRunning { process.terminate() }
-        deliver(.failed("Harness did not emit its readiness line within \(readinessDeadline.diagnosticSeconds) seconds.\n\n\(diagnostics)"))
+        deliver(.failed("本地服务未能在 \(readinessDeadline.diagnosticSeconds) 秒内完成启动，请重试。"))
     }
 
     private func processTerminated(status: Int32) {
@@ -112,8 +107,8 @@ final class OwnedHostProcess {
         }
         guard !reportedFailure else { return }
         reportedFailure = true
-        let phase = reportedReadiness ? "after startup" : "before readiness"
-        deliver(.failed("Harness exited \(phase) with status \(status).\n\n\(diagnostics)"))
+        let phase = reportedReadiness ? "启动后" : "准备完成前"
+        deliver(.failed("本地服务在\(phase)退出（状态 \(status)），请重试。"))
     }
 
     private func deliver(_ event: HostProcessEvent) {

@@ -6,6 +6,10 @@
 
 [产品网站](https://miracle-ai-studio.github.io/deepseek-harness-desktop/) · [架构设计](docs/architecture.zh.md) · [交付约定](docs/delivery-contracts.md)
 
+## 下载
+
+请从 [Releases 页面](https://github.com/miracle-ai-studio/deepseek-harness-desktop/releases/latest)下载最新 DMG。消费者版本已内置版本固定的 DeepSeek Harness Host 与官方 Node.js 运行时，无需准备源码 checkout、Homebrew Node 或另外安装依赖。
+
 ## 从源码运行
 
 将本仓库与兼容的 DeepSeek Harness checkout 保持同级：
@@ -35,6 +39,14 @@ open "dist/DeepSeek Harness Desktop.app"
 ```
 
 直接打开 App 会进入 owner 模式：它会定位同级 Harness checkout、启动既有 `web` profile，并且只拥有该子 Host。
+
+如需组装与 Release 相同的独立消费者应用：
+
+```sh
+npm run build:release
+npm run smoke:runtime
+npm run smoke:release
+```
 
 ## 连接已有 profile
 
@@ -69,8 +81,8 @@ Profile 会先启动现有 Host。Loader 就绪后，插件将原生窗口连接
 | `applicationPath` | `DSH_DESKTOP_APP_PATH`，发行 profile 中回退到 `/Applications/DeepSeek Harness Desktop.app` | 选择配套 App。 |
 | `launchMode` | `launch-if-needed` | 启动 App；`attach-only` 只打印解析后的 URL。 |
 | `launchTimeoutMs` | `30000` | 原生启动与自有进程清理的超时时间。 |
-| `DSH_HARNESS_ROOT` | 同级 `../deepseek-harness` | 为 owner 模式选择 Harness 源码 checkout。 |
-| `DSH_NODE_BINARY` | 常见 Homebrew 路径，然后是 `PATH` | 为 owner 模式选择 Node。 |
+| `DSH_HARNESS_ROOT` | 同级 `../deepseek-harness` | 为开发版 owner 模式选择 Harness 源码 checkout。 |
+| `DSH_NODE_BINARY` | 常见 Homebrew 路径，然后是 `PATH` | 为开发版 owner 模式选择 Node。 |
 
 ## 开发
 
@@ -84,6 +96,8 @@ npm run build:app
 npm run smoke
 npm run smoke:native
 npm run smoke:assembled
+npm run smoke:runtime
+npm run smoke:release
 npm run check
 ```
 

@@ -7,14 +7,14 @@ public enum HarnessRootLocator {
     ///   - commandLineRoot: The optional `--harness-root` value.
     ///   - environment: The process environment.
     ///   - executableURL: The desktop executable path.
-    ///   - sourceFileURL: A source anchor used by SwiftPM development builds.
+    ///   - sourceFileURL: An optional explicit source anchor used only by tests and development tooling.
     ///   - fileManager: Filesystem access used for validation.
     /// - Returns: A standardized checkout directory URL.
     public static func locate(
         commandLineRoot: String?,
         environment: [String: String],
         executableURL: URL,
-        sourceFileURL: URL = URL(fileURLWithPath: #filePath),
+        sourceFileURL: URL? = nil,
         fileManager: FileManager = .default
     ) throws -> URL {
         var candidates: [URL] = []
@@ -26,12 +26,14 @@ public enum HarnessRootLocator {
             if let repositoryRoot = desktopRepositoryRoot(containing: executableURL) {
                 candidates.append(repositoryRoot.deletingLastPathComponent().appendingPathComponent("deepseek-harness"))
             }
-            let packageRoot = sourceFileURL
-                .deletingLastPathComponent()
-                .deletingLastPathComponent()
-                .deletingLastPathComponent()
-            let desktopRepositoryRoot = packageRoot.deletingLastPathComponent().deletingLastPathComponent()
-            candidates.append(desktopRepositoryRoot.deletingLastPathComponent().appendingPathComponent("deepseek-harness"))
+            if let sourceFileURL {
+                let packageRoot = sourceFileURL
+                    .deletingLastPathComponent()
+                    .deletingLastPathComponent()
+                    .deletingLastPathComponent()
+                let desktopRepositoryRoot = packageRoot.deletingLastPathComponent().deletingLastPathComponent()
+                candidates.append(desktopRepositoryRoot.deletingLastPathComponent().appendingPathComponent("deepseek-harness"))
+            }
         }
 
         for candidate in candidates {
@@ -41,8 +43,7 @@ public enum HarnessRootLocator {
             }
         }
 
-        let searched = candidates.map(\.standardizedFileURL.path).joined(separator: ", ")
-        throw HarnessRootError.notFound(searched: searched)
+        throw HarnessRootError.notFound
     }
 
     private static func desktopRepositoryRoot(containing executableURL: URL) -> URL? {
@@ -58,12 +59,12 @@ public enum HarnessRootLocator {
 
 /// Failures from locating an existing Harness checkout.
 public enum HarnessRootError: LocalizedError, Equatable {
-    case notFound(searched: String)
+    case notFound
 
     public var errorDescription: String? {
         switch self {
-        case .notFound(let searched):
-            return "DeepSeek Harness checkout not found. Searched: \(searched). Set DSH_HARNESS_ROOT or pass --harness-root."
+        case .notFound:
+            return "未找到开发运行时。请使用包含内置运行时的发行版，或重新检查开发环境配置。"
         }
     }
 }

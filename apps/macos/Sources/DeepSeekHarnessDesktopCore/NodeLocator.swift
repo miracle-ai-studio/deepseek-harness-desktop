@@ -13,29 +13,23 @@ public enum NodeLocator {
         standardCandidatePaths: [String] = ["/opt/homebrew/bin/node", "/usr/local/bin/node"],
         fileManager: FileManager = .default
     ) throws -> URL {
-        var attempted: [String] = []
         if let override = environment["DSH_NODE_BINARY"], !override.isEmpty {
-            attempted.append("DSH_NODE_BINARY=\(override)")
             let candidate = URL(fileURLWithPath: override)
             if isExecutableRegularFile(candidate, fileManager: fileManager) { return candidate }
-        } else {
-            attempted.append("DSH_NODE_BINARY (unset)")
         }
 
         for path in standardCandidatePaths {
-            attempted.append(path)
             let candidate = URL(fileURLWithPath: path)
             if isExecutableRegularFile(candidate, fileManager: fileManager) { return candidate }
         }
 
         let pathValue = environment["PATH"] ?? ""
-        attempted.append("node through PATH=\(pathValue)")
         for directory in pathValue.split(separator: ":", omittingEmptySubsequences: true) {
             let candidate = URL(fileURLWithPath: String(directory)).appendingPathComponent("node")
             if fileManager.isExecutableFile(atPath: candidate.path) { return candidate }
         }
 
-        throw NodeLocatorError.notFound(attempted: attempted)
+        throw NodeLocatorError.notFound
     }
 
     private static func isExecutableRegularFile(_ url: URL, fileManager: FileManager) -> Bool {
@@ -52,12 +46,12 @@ public enum NodeLocator {
 
 /// Failures from resolving Node for owner mode.
 public enum NodeLocatorError: LocalizedError, Equatable {
-    case notFound(attempted: [String])
+    case notFound
 
     public var errorDescription: String? {
         switch self {
-        case .notFound(let attempted):
-            return "Node executable not found. Checked: \(attempted.joined(separator: ", "))."
+        case .notFound:
+            return "未找到可用的开发运行时。请重新检查开发环境配置。"
         }
     }
 }
