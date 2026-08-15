@@ -8,7 +8,7 @@ A native macOS desktop app for [DeepSeek Harness](https://github.com/deepseek-ai
 
 ## Download
 
-Download the latest DMG from the [Releases page](https://github.com/miracle-ai-studio/deepseek-harness-desktop/releases/latest). The consumer application includes its versioned DeepSeek Harness Host and official Node.js runtime, so it does not require a source checkout, Homebrew Node, or a separate dependency install.
+Download the latest macOS version from the [product website](https://miracle-ai-studio.github.io/deepseek-harness-desktop/). For previous versions, visit the [Releases page](https://github.com/miracle-ai-studio/deepseek-harness-desktop/releases). The consumer application includes its versioned DeepSeek Harness Host and official Node.js runtime, so it does not require a source checkout, Homebrew Node, or a separate dependency install.
 
 ## Run from source
 

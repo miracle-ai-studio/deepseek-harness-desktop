@@ -8,7 +8,7 @@
 
 ## 下载
 
-请从 [Releases 页面](https://github.com/miracle-ai-studio/deepseek-harness-desktop/releases/latest)下载最新 DMG。消费者版本已内置版本固定的 DeepSeek Harness Host 与官方 Node.js 运行时，无需准备源码 checkout、Homebrew Node 或另外安装依赖。
+请从[产品网站](https://miracle-ai-studio.github.io/deepseek-harness-desktop/)下载最新 macOS 版本；如需历史版本，请前往 [Releases 页面](https://github.com/miracle-ai-studio/deepseek-harness-desktop/releases)。消费者版本已内置版本固定的 DeepSeek Harness Host 与官方 Node.js 运行时，无需准备源码 checkout、Homebrew Node 或另外安装依赖。
 
 ## 从源码运行
 
